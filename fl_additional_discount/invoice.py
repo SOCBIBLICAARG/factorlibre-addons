@@ -25,6 +25,7 @@ import openerp.addons.decimal_precision as dp
 
 import openerp.netsvc
 import openerp.pooler
+from openerp import api
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 
@@ -155,11 +156,12 @@ class account_invoice_tax(osv.osv):
 
     _inherit = 'account.invoice.tax'
 
-    def compute(self, cr, uid, invoice_id, context=None):
+    @api.v8
+    def compute(self, invoice):
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
+        inv = invoice
         cur = inv.currency_id
         company_currency = inv.company_id.currency_id.id
 
@@ -167,11 +169,12 @@ class account_invoice_tax(osv.osv):
             line_price_unit = (line.price_unit * (1 - (line.discount or 0.0) / 100.0))
             line_price_unit = (line_price_unit * (1 - (inv.add_disc or 0.0) / 100.0))
 
-            for tax in tax_obj.compute_all(
-                    cr, uid, line.invoice_line_tax_id,
-                    line_price_unit,
-                    line.quantity, inv.address_invoice_id.id, line.product_id,
-                    inv.partner_id, context=context)['taxes']:
+            taxes = line.invoice_line_tax_id.compute_all(line_price_unit, 
+                        line.quantity,
+                        product=line.product_id,
+                        partner=invoice.partner_id)['taxes']
+
+            for tax in taxes:
                 val={}
 
                 val['invoice_id'] = inv.id

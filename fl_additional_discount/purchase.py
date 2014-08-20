@@ -53,7 +53,12 @@ class purchase_order(osv.osv):
             for line in order.order_line:
                val1 += line.price_subtotal
                line_price_unit = line.price_unit * (1-(order.add_disc or 0.0)/100.0)
-               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line_price_unit, line.product_qty, order.partner_address_id.id, line.product_id.id, order.partner_id)['taxes']:
+               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id,
+                                                                 line_price_unit,
+                                                                 line.product_qty,
+                                                                 product=line.product_id.id,
+                                                                 partner=order.partner_id.id
+                                                                )['taxes']:
                     val += c.get('amount', 0.0)
             val2 = val1 * order.add_disc/100
             res[order.id]['add_disc_amt'] = cur_obj.round(cr, uid, cur, val2)
