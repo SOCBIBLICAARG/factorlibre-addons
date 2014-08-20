@@ -23,11 +23,11 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from osv import osv, fields
-import netsvc
-import pooler
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import osv, fields
+import openerp.netsvc as netsvc
+import openerp.pooler as pooler
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class purchase_order(osv.osv):
     
