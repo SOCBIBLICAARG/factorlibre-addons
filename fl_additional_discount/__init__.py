@@ -1,3 +1,3 @@
 import sale
-import purchase
-import invoice
+# import purchase
+# import invoice
