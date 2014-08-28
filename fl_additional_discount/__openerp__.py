@@ -20,7 +20,7 @@
 ##############################################################################
 {
     "name": "FL Additional discount",
-    "version": "1.0",
+    "version": "1.0.1",
     "depends": ["base","sale","purchase","account"],
     "author": "E-nova tecnologies Pvt. Ltd. / Factor Libre",
     "category": "Sales",
