@@ -25,11 +25,9 @@ import openerp.addons.decimal_precision as dp
 
 import openerp.netsvc
 import openerp.pooler
-from openerp import api
-from openerp.osv import fields, osv, orm
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 
-class account_invoice(osv.osv):
+class account_invoice(models.Model):
     
     _name = "account.invoice"
     _inherit = "account.invoice"
@@ -162,7 +160,7 @@ class account_invoice_tax(osv.osv):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         inv = invoice
-        cur = inv.currency_id
+        cur = inv.currency_id.with_context(date=invoice.date_invoice or fields.Date.today())
         company_currency = inv.company_id.currency_id.id
 
         for line in inv.invoice_line:
@@ -182,7 +180,7 @@ class account_invoice_tax(osv.osv):
                 val['amount'] = tax['amount']
                 val['manual'] = False
                 val['sequence'] = tax['sequence']
-                val['base'] = cur_obj.round(cr, uid, cur, tax['price_unit'] * line['quantity']) 
+                val['base'] = currency.round(tax['price_unit'] * line['quantity']) 
 
                 if inv.type in ('out_invoice','in_invoice'):
                     val['base_code_id'] = tax['base_code_id']
