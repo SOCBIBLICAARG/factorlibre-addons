@@ -16,7 +16,7 @@
             </field>
        </record>
     	
-       <!-- record id="purchase_order_form_add_discount" model="ir.ui.view">
+       <record id="purchase_order_form_add_discount" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="type">form</field>
@@ -57,7 +57,7 @@
 			<field name="add_disc_amt" />
 		</field>
             </field>
-        </record -->
+        </record>
         
                   
     		
