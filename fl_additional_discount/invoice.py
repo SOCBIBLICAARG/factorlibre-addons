@@ -23,11 +23,11 @@ import time
 from lxml import etree
 import openerp.addons.decimal_precision as dp
 
+from openerp.osv import osv, fields
 import openerp.netsvc
 import openerp.pooler
-from openerp import models, fields, api, _
 
-class account_invoice(models.Model):
+class account_invoice(osv.osv):
     
     _name = "account.invoice"
     _inherit = "account.invoice"
@@ -154,12 +154,11 @@ class account_invoice_tax(osv.osv):
 
     _inherit = 'account.invoice.tax'
 
-    @api.v8
-    def compute(self, invoice):
+    def compute(self, cr, uid, ids, context=None):
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        inv = invoice
+        inv = self.browse(cr, uid, ids, context=context)
         cur = inv.currency_id.with_context(date=invoice.date_invoice or fields.Date.today())
         company_currency = inv.company_id.currency_id.id
 
