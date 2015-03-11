@@ -129,7 +129,7 @@ class purchase_order(osv.osv):
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
 
-                po_line.write({'invoiced':True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+                po_line.write({'invoiced':True, 'invoice_lines': [(4, inv_line_id)]})
 
             # get invoice data and create invoice
             inv_data = {
@@ -139,8 +139,6 @@ class purchase_order(osv.osv):
                 'type': 'in_invoice',
                 'partner_id': order.partner_id.id,
                 'currency_id': order.pricelist_id.currency_id.id,
-                'address_invoice_id': order.partner_address_id.id,
-                'address_contact_id': order.partner_address_id.id,
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'invoice_line': [(6, 0, inv_lines)], 
                 'origin': order.name,
@@ -155,7 +153,7 @@ class purchase_order(osv.osv):
             inv_obj.button_compute(cr, uid, [inv_id], context=context, set_total=True)
 
             # Link this new invoice to related purchase order
-            order.write({'invoice_ids': [(4, inv_id)]}, context=context)
+            order.write({'invoice_ids': [(4, inv_id)]})
             res = inv_id
         return res
     

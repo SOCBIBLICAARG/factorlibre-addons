@@ -31,7 +31,7 @@
         </record>     
         
         
-        <record id="invoice_form_add_discount" model="ir.ui.view">
+        <!--record id="invoice_form_add_discount" model="ir.ui.view">
             <field name="name">account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="type">form</field>
@@ -57,7 +57,7 @@
 			<field name="add_disc_amt" />
 		</field>
             </field>
-        </record>
+        </record-->
         
                   
     		

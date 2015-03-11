@@ -136,7 +136,7 @@ class sale_order(osv.osv):
         inv_id = inv_obj.create(cr, uid, inv, context=context)
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime('%Y-%m-%d'))
         if data.get('value', False):
-            inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
+            inv_obj.write(cr, uid, [inv_id], data['value'])
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
     
