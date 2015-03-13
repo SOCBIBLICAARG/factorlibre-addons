@@ -30,11 +30,11 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 class purchase_order(osv.osv):
-    
+
     _name = "purchase.order"
     _inherit = "purchase.order"
     _description = "Purchase Order"
-   
+
 
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -67,9 +67,9 @@ class purchase_order(osv.osv):
             res[order.id]['amount_net'] = res[order.id]['amount_untaxed'] - res[order.id]['add_disc_amt']
             res[order.id]['amount_total'] = res[order.id]['amount_net'] + res[order.id]['amount_tax']
         return res
-            
+
     _columns={
-            
+
             'add_disc':fields.float('Additional Discount(%)',digits=(4,2), states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}),
             'add_disc_amt': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Additional Disc Amt',
                                             store =True,multi='sums', help="The additional discount on untaxed amount."),
@@ -81,15 +81,15 @@ class purchase_order(osv.osv):
                                           store=True, multi="sums", help="The tax amount"),
             'amount_total': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Total',
                                             store=True, multi="sums",help="The total amount"),
-              
+
             }
-    
-        
+
+
     _defaults={
-               'add_disc': 0.0,               
+               'add_disc': 0.0,
                }
-    
-    
+
+
     def action_invoice_create(self, cr, uid, ids, context=None):
         """Generates invoice for given ids of purchase orders and links that invoice ID to purchase order.
         :param ids: list of ids of purchase orders.
@@ -140,7 +140,7 @@ class purchase_order(osv.osv):
                 'partner_id': order.partner_id.id,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
-                'invoice_line': [(6, 0, inv_lines)], 
+                'invoice_line': [(6, 0, inv_lines)],
                 'origin': order.name,
                 'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
                 'payment_term': order.partner_id.property_payment_term and order.partner_id.property_payment_term.id or False,
@@ -156,6 +156,6 @@ class purchase_order(osv.osv):
             order.write({'invoice_ids': [(4, inv_id)]})
             res = inv_id
         return res
-    
-    
+
+
 purchase_order()

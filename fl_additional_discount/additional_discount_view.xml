@@ -31,21 +31,21 @@
         </record>     
         
         
-        <!--record id="invoice_form_add_discount" model="ir.ui.view">
+        <record id="invoice_form_add_discount" model="ir.ui.view">
             <field name="name">account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <field name="amount_untaxed" position="after">
-			<field name="add_disc" />
-			<field name="add_disc_amt" />
+			<field name="add_disc" readonly="1"/>
+			<field name="add_disc_amt" readonly="1"/>
                 </field>
             </field>
         </record>
             
         
-        <record id="invoice_supplier_form_add_discount" model="ir.ui.view">
+        <!--record id="invoice_supplier_form_add_discount" model="ir.ui.view">
             <field name="name">account.invoice.supplier.form</field>
             <field name="model">account.invoice</field>
             <field name="type">form</field>

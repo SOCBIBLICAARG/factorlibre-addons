@@ -18,19 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-import time
-
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+#
+# from datetime import datetime, timedelta
+# from dateutil.relativedelta import relativedelta
+# import time
+#
+# from openerp.osv import fields, osv
+# from openerp.tools.translate import _
+# import openerp.addons.decimal_precision as dp
+# import openerp.netsvc
+from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
-import openerp.netsvc
 
-class sale_order(osv.osv):
-
-    _name = 'sale.order'
+class account_invoice(models.Model):
     _inherit = 'sale.order'
 
     def _amount_line_tax(self, cr, uid, line, discounts=0, context=None):
@@ -55,7 +55,7 @@ class sale_order(osv.osv):
             cur = order.pricelist_id.currency_id
             val_discount = 0
             for line in order.order_line:
-                line_discounts = 0                
+                line_discounts = 0
                 if order.add_disc > 0 and order.add_disc <= 100:
                     val2 = (line.price_subtotal) * order.add_disc/100.0
                     val_discount  += val2
@@ -71,25 +71,25 @@ class sale_order(osv.osv):
 
 
     _columns = {
-            
+
             'add_disc':fields.float('Additional Discount(%)',digits=(4,2), readonly=True, states={'draft': [('readonly', False)]}),
             'add_disc_amt': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Additional Disc Amt',
                                             store =True,multi='sums', help="The additional discount on untaxed amount."),
             'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Untaxed Amount',
                                               store = True,multi='sums', help="The amount without tax."),
             'amount_net': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Net Amount',
-                                              store = True,multi='sums', help="The amount after additional discount."),                                              
+                                              store = True,multi='sums', help="The amount after additional discount."),
             'amount_tax': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Taxes',
                                           store = True,multi='sums', help="The tax amount."),
             'amount_total': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Total',
                                             store = True,multi='sums', help="The total amount."),
         }
-    
+
     _defaults={
-               'add_disc': 0.0,               
+               'add_disc': 0.0,
                }
-    
-    
+
+
     def _make_invoice(self, cr, uid, order, lines, context=None):
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
@@ -139,7 +139,7 @@ class sale_order(osv.osv):
             inv_obj.write(cr, uid, [inv_id], data['value'])
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
-    
-    
-        
+
+
+
 sale_order()
